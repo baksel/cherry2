@@ -1,0 +1,9 @@
+efunero/node_modules
+efunero/public
+efunero/src/config
+
+*.json
+*.svg
+
+*test*
+efunero/src/reportWebVitals.js

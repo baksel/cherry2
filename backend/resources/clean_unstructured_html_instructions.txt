@@ -1,0 +1,16 @@
+I will provide you the HTML content of a funeral provider's website. The language of the content is Finnish.
+
+I want you to return a modified, unstructured version of the content in Markdown or HTML, whatever is easier for you.
+
+- The resulting content should have all information that could be relevant for extracting price and product information later on.
+- You can drop all styling tags, javascript, or whatever you deem not relevant for extracting price information. But if the javascript has product information embdedded, you should include it in the output.
+- Do not summarize the information in the HTML. When you identify that something could be relevant, include it in the output 'as-is', but you can exclude unrelated information. For example, if there's non-product related information surrounding it, or styling files or function names, etc.
+- DO NOT THINK TOO MUCH ABOUT WHAT TO INCLUDE!! When in doubt, keep the content
+
+More context of what I'm doing
+1: Produce a cleaner, unstructured version of the HTML with relevant information (this is your part)
+2: Then, I will myself manually extract the price information (done by me)
+
+
+
+The output should be a HTML file or a markdown file. Nothing else

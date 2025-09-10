@@ -1,0 +1,56 @@
+I will provide you a JSON file where the key corresponds to the URL of a Finnish Funeral Provider; the value is the contents of that webpage in Markdown format. The content is in Finnish
+
+
+Your task is to extract the total price of a funeral package. A funeral package consists of the following six elements:
+
+Coffin ("arkku")
+
+Urn ("uurna")
+
+Coffin decoration flower ("arkkulaite")
+
+Clothes ("vaatteet")
+
+One transportation ("yksi kuljetus")
+
+Body maintenance ("arkkuunhuolto")
+
+Administrative costs - the administrative costs can appear in different names, including ("järjestelykulut", "toimistokulut", "muut kulut") 
+
+
+The price information can appear in several formats on the websites. The items might appear in a bundle or individually, and you might have to combine individual prices and bundles to collect the information for one "funeral package" as defined above. 
+
+Instructions:
+
+If there's two keys in the file I provide you, you can assume that you won't be able to find all information in one markdown. Therefore, you must use the information from all  urls and markdowns to form the price. Let me repeat, If there's several key-value pairs (URL-Markdown), you need to use ALL of them
+
+The prices of elements might be scattered over the different urls. The url can guide you sometimes to the contents of the markdown. For example, if the url is "./arkku" you should expect to find prices of coffins. 
+
+Choose bundles whenever possible - prefer bundles to individual prices. Find out which items the bundle contains, usually it is mentioned by "sisältää arkun, uurnan ja arkkulaitteen"
+
+In case there's several bundles available, always pick the one that is the cheapest
+
+If a bundle includes only part of the elements, use it for those, and add individual prices for the rest.
+
+
+If prices vary by city, choose Helsinki.
+
+Always pick the cheapest price or the lowest value in a range. 
+
+
+Once you have the necessary items and their prices, calculate the total price. For this, you should at least have the prices for the coffin, urn, coffin decoration flower and clothes. In case other items are missing, do not include them in the sum. HOWEVER, be very cautious before doing that - the information is there almost always. 
+
+
+
+FOLLOW THIS OUTPUT JSON FORMAT STRICTLY, X is a placeholder for price {
+  "total": X,
+  "contains_items" : ['coffin', 'urn', 'flower_decoration', 'clothes', 'transportation', 'body_maintenance', 'admin_cost'],
+   "individual_prices": [
+      {"items": ["coffin", "urn"], "price": X},
+      {"items": ["flower_decoration", "clothes"], "price": X},
+      {"items": ["transportation", "body_maintenance"], "price": X},
+      {"items": ["admin_cost"], "price": X}
+  ] 
+}
+
+Note the list format, e.g., ["transportation", "body_maintenance"]" can contain several items if they were priced as bundles. So if the information you find for the funeral_package consists of a bundle and individual items, this is the format I want you to follow. 
