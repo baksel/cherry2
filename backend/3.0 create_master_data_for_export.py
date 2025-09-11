@@ -2,15 +2,14 @@ import pandas as pd
 import json
 import os
 import ast
-from setup import *
-from pathlib import Path
+from setup import PROJECT_ROOT, RESULTS_DATE_PATH
 
 
 # Create folder if doesn't exist
-Path(f"{PROJECT_ROOT}/results/wordpress").mkdir(parents=True, exist_ok=True)
 
-funeral_provider_clean_prices_path = f"{PROJECT_ROOT}/funeral_provider_prices_clean.csv"
-funeral_provider_directory_path = "C:/Users/aksel/OneDrive/Projects/funeral_services/funeral_provider_directory.xlsx"
+funeral_provider_clean_prices_path = f"{RESULTS_DATE_PATH}/cleaned/funeral_provider_prices_clean.csv"
+
+funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_directory.xlsx"
 
 
 # Import the funeral directory for merging address, url, and location
@@ -55,7 +54,7 @@ df_funeral_providers_final.drop(
 
 
 df_funeral_providers_final.to_json(
-    path_or_buf = f"{PROJECT_ROOT}/results/wordpress/funeral_providers_export_{DATE}.json", 
+    path_or_buf = f"{RESULTS_DATE_PATH}/cleaned/final_firebase_export_version.json", 
     orient      = "records", 
     indent      = 2,
     force_ascii = False,

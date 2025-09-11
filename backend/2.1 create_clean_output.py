@@ -2,29 +2,30 @@ import pandas as pd
 import json
 import os
 import ast
-from setup import *
+from setup import DATE, RESULTS_DATE_PATH, FUNERAL_DIRECTOR_NAMES
+from pathlib import Path
 
-# Is problematic: Helsingin Hautaustoimisto
 
+# Add specification to LLM instructions on how to treat missing values
 NA_VALUES = ["NA", None, "", "Nan", "0"]
+
 data_types = {
         "items" : object,
         "price" : str
     }
-funeral_provider_results = f"{PROJECT_ROOT}/results"
-funeral_provider_output_path = f"{funeral_provider_results}/{DATE}"
 
 
-funeral_provider_names = os.listdir(funeral_provider_output_path)
+# Create output directory for cleaned and merged prices, if it doesn't exist
+Path(f"{RESULTS_DATE_PATH}/cleaned").mkdir(parents=True, exist_ok=True)
 
 
 
-def ProcessRawPrices(funeral_provider_name : str) -> pd.DataFrame | None:
+def ProcessRawPrices(name : str) -> pd.DataFrame | None:
     
-    funeral_provider_results_path = f"{funeral_provider_output_path}/{funeral_provider_name}"
-    #funeral_provider_results_path = "C:/Users/aksel/OneDrive/Projects/funeral_services/app_development/results/2025_04_06/eHautaus"    
+    results_path = f"{RESULTS_DATE_PATH}/{name}"
+    
     # Read the JSON file
-    json_file_path = f"{funeral_provider_results_path}/prices_raw_2.json"
+    json_file_path = f"{results_path}/prices_raw_2.json"
     with open(json_file_path, 'r') as file:
         data = json.load(file)
 
@@ -89,26 +90,27 @@ def ProcessRawPrices(funeral_provider_name : str) -> pd.DataFrame | None:
         
     )
 
-    df_funeral_provider_final = pd.concat([df_individual_prices, df_total_row])
+    df_final = pd.concat([df_individual_prices, df_total_row])
    
-    df_funeral_provider_final = df_funeral_provider_final.assign(
+    df_final = df_final.assign(
        date = DATE,
-       funeral_provider = funeral_provider_name
+       funeral_provider = name
     )
 
-    return df_funeral_provider_final 
+    return df_final 
     
 
 
-df_funeral_providers = [ProcessRawPrices(funeral_provider_name) for funeral_provider_name in funeral_provider_names]
+df_funeral_providers = [ProcessRawPrices(name) for name in FUNERAL_DIRECTOR_NAMES]
 
 # Merge individual funeral providers price dfs together
 df_funeral_providers_final = pd.concat(df_funeral_providers)
 
 
 
+
 df_funeral_providers_final.to_csv(
-    path_or_buf = f"{PROJECT_ROOT}/funeral_provider_prices_clean.csv",
+    path_or_buf = f"{RESULTS_DATE_PATH}/cleaned/funeral_provider_prices_clean.csv",
     sep         = ";",
     index       = False,
 )

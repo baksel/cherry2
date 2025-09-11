@@ -8,9 +8,6 @@ import json
 from setup import PROJECT_ROOT
 from datetime import datetime
 
-#TODO
-# Research how to start fine-tuning... I guess that part I can do at work tmr.
-
 
 
 funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_directory.xlsx"
