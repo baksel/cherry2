@@ -5,20 +5,8 @@ import FuneralItems from './cmp/FuneralItems';
 import Footer from './cmp/Footer'; 
 import ThePitch from './cmp/ThePitch';
 import { useState} from 'react';
-import { useGetItems } from './hooks/useGetItems';
-
-
-  
 
 function App() {
-
-  
-
-  const funeralData = useGetItems();
-    
-  
-  console.log(funeralData);
-  
 
   // By default, the search area will have "Helsinki" as the value
   const [searchAreaValue, setSearchAreaValue] = useState("Helsinki");
