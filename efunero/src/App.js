@@ -1,6 +1,6 @@
 import './App.css';
 import Header from './cmp/Header';
-import SearchArea from './cmp/SearchArea';
+//import SearchArea from './cmp/SearchArea';
 import FuneralItems from './cmp/FuneralItems';
 import Footer from './cmp/Footer'; 
 import ThePitch from './cmp/ThePitch';
@@ -16,10 +16,12 @@ function App() {
     <>  
       <div className="App">
         <Header />
-        <ThePitch />
-        <SearchArea updateCurrentSearchValue = {setSearchAreaValue}/>
-        <FuneralItems searchAreaValue = {searchAreaValue}/>
-        <Footer /> 
+        <div className="App-body">
+          <ThePitch  updateCurrentSearchValue = {setSearchAreaValue} />
+          {/* <SearchArea updateCurrentSearchValue = {setSearchAreaValue}/> */}
+          <FuneralItems searchAreaValue = {searchAreaValue}/>
+        </div>
+          <Footer /> 
       </div>
     </>
     
