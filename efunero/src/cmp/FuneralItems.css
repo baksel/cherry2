@@ -1,16 +1,9 @@
 .FuneralItems {
   display: flex;
   flex-direction: column;
-  /*max-width: 1200px;*/
-  padding: 1rem;
-  /*background-color: #ebf0ff; /* Light purple for items container */
-  border: 2px dashed #9999ff;
 }
 
 .FuneralItems h2 {
-  color: #333;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
   text-align: left;
 }
 

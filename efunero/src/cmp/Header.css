@@ -1,16 +1,10 @@
 .App-Header {
   display: flex; 
   justify-content: flex-start;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 2rem;
   background-color: #ffebeb; /* Light red for header */
-  /*border: 2px dashed #ff9999; */
-  margin: 4px;
 }
 
 .App-Header h1 {
-  margin: 0;
   font-size: 2.0rem;
   font-weight: 500;
   color: #333;
