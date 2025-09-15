@@ -1,7 +1,10 @@
 .App-Header {
   display: flex; 
   justify-content: flex-start;
-  background-color: #ffebeb; /* Light red for header */
+  background-color: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+  padding: 1rem 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .App-Header h1 {
