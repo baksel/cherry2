@@ -8,7 +8,7 @@ function FuneralItems({searchAreaValue}) {
 
     return (
         <div className="FuneralItems">
-            <h2>Funeral Items in {searchAreaValue} </h2>
+            <h2>Hautaustoimistot {searchAreaValue} </h2>
             {funeralData.map( (item, idx) => { return (
               <FuneralItem item = {item} />
             )
