@@ -4,7 +4,6 @@ import { useGetItems } from '../hooks/useGetItems';
 
 function FuneralItems({searchAreaValue}) {
     const funeralData = useGetItems();
-    console.log(funeralData)
 
 
     return (

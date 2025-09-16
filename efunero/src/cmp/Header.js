@@ -1,12 +1,12 @@
-import logo from '../logo.svg';
 import './Header.css';
 
 function Header() {
 
     return (
         <header className="App-Header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1>Welcome to Efunero</h1>
+            
+            <h1>Efunero</h1>
+            <p>Efunero on hautaustoimistojen vertailusivusto, joka auttaa sinua löytämään edullisimmat hautaustoimistot alueeltasi. </p>
         </header>
     );
 }

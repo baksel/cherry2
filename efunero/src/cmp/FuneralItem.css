@@ -7,8 +7,8 @@
   border: 1px solid #eaeaea;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s;
+  align-items: center;
 }
-
 .FuneralItem:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -21,6 +21,8 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+
+
 }
 
 .price-button:hover {
@@ -43,6 +45,4 @@
 
 .price-button {
   display: flex;
-  height: 50%;
-  width: 80%;
 }

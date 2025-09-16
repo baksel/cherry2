@@ -6,10 +6,16 @@
 }
 
 
-input.search-bar {
+.search-bar {
   border: 1px solid #e6e6e6;
   font-size: 1rem;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  cursor: pointer;
+  margin: 1rem 0;
 }
 
