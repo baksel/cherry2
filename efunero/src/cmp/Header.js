@@ -4,9 +4,8 @@ function Header() {
 
     return (
         <header className="App-Header">
-            
             <h1>Efunero</h1>
-            <p>Efunero on hautaustoimistojen vertailusivusto, joka auttaa sinua löytämään edullisimmat hautaustoimistot alueeltasi. </p>
+            <p>Efunero auttaa sinua löytämään edullisimmat hautaustoimistot alueellasi. </p>
         </header>
     );
 }
