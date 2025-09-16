@@ -1,19 +1,10 @@
 .App-Header {
   display: flex; 
   justify-content: flex-start;
-  background-color: #ffffff;
   border-bottom: 1px solid #eaeaea;
   padding: 1rem 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.App-Header h1 {
-  font-size: 2.0rem;
-  font-weight: 500;
-  color: #333;
-}
 
-.App-Header img {
-  height: 40px;
-  width: auto;
-}
+

@@ -1,7 +1,5 @@
 .Footer {
     display: flex; 
     flex-direction: column;
-    background-color: #f8f9fa;
     font-size: 14px;
-    color: #6c757d;
 }
