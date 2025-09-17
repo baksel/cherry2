@@ -18,12 +18,12 @@
   border-radius: 4px;
   cursor: pointer;
   margin: 1rem 0;
-  width: clamp(320px, 30vw, 1200px);
+  width: clamp(320px, 30vw, 2400px);
   align-self: center;
 }
 
 
 .search-button {
-  width: clamp(320px, 30vw, 1200px);
+  width: clamp(320px, 30vw, 2400px);
   align-self: center;
 }

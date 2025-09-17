@@ -21,7 +21,7 @@ function ThePitch({ updateCurrentSearchValue }) {
             // Take the value from the select input and pass it to updateCurrentSearchValue
                 onClick={ () =>  updateCurrentSearchValue(tempCityHolder.current)}     
                 > 
-                Search
+                Hae
             </button> 
 
 
