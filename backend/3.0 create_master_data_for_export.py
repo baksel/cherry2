@@ -25,7 +25,7 @@ funeral_provider_clean_prices_df_raw = pd.read_csv(
 df_funeral_providers_clean_prices : pd.DataFrame= funeral_provider_clean_prices_df_raw.loc[ funeral_provider_clean_prices_df_raw.IsAllItems == True,]
 
 # Select the columns we need from the directory
-df_funeral_provider_directory = df_funeral_provider_directory_raw[['Name', 'Url', 'Palveluealue', 'Osoitteet']]
+df_funeral_provider_directory = df_funeral_provider_directory_raw[['Name', 'Url', 'Palvelualue', "Puhelinnumero", 'Osoitteet']]
 
 
 df_funeral_providers_final = pd.merge(
@@ -38,7 +38,7 @@ df_funeral_providers_final = pd.merge(
 
 df_funeral_providers_final.rename(
     columns = {
-        'Palveluealue' : "location",
+        'Palvelualue' : "location",
         'Osoitteet'    : "address",
         "Url"          : "url"
     },
@@ -48,7 +48,7 @@ df_funeral_providers_final.rename(
 # These columns are not sent Wordpress
 df_funeral_providers_final.drop(
     axis    = 1,
-    columns = ["Name", "IsAllItems", "items", 'address'],
+    columns = ["Name", "IsAllItems"],
     inplace = True
 )
 
