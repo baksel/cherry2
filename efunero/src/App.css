@@ -26,6 +26,7 @@ h1, h2, h3 {
   color: var(--color-text-dark);
 }
 
+
 p, span {
   font-weight: 400; /* regular */
   color: var(--color-text-light);
@@ -49,4 +50,8 @@ button {
   font-size: 0.85rem;
   cursor: pointer;
   transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #2d4ed8;
 }

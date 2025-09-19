@@ -1,12 +1,13 @@
 import './ThePitch.css';
 import { useRef } from 'react';
-
+import { AiOutlineSearch } from 'react-icons/ai';
 
 function ThePitch({ updateCurrentSearchValue }) {
     let tempCityHolder = useRef("Helsinki");
 
     return (
         <div className="ThePitch">
+            <i className="search-icon"><AiOutlineSearch /></i>
              <h1 className="intro-text"> Löydä hautaustoimistot helposti alueellasi</h1>
             <select 
                 className="search-bar"

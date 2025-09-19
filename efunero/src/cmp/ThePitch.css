@@ -1,11 +1,21 @@
 .ThePitch { 
   display: flex;
-  text-align: center;
+  text-align: center; 
   flex-direction: column;
   min-height: 100%;
   border-radius: 8px;
   padding: 1.5rem;
+  gap: 1rem;
   background-color: var(--color-bg-card);
+}
+
+.search-icon {
+  display: flex;
+  align-content: start;
+  flex-shrink: 1;
+  font-size: 2rem;
+  width: fit-content;
+  height: fit-content;
 }
 
 
