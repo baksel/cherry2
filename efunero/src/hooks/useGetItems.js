@@ -9,7 +9,7 @@ export const useGetItems =  () => {
   
 
   async function testFirebase() {
-    const testCollection = collection(db, 'funeral_providers');
+    const testCollection = collection(db, 'funeral_providers_1');
     const dataSnapshot = await getDocs(testCollection);
     const dataList = dataSnapshot.docs.map(doc => doc.data());
     setFireBaseData(dataList);

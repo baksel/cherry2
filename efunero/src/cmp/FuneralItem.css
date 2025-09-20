@@ -15,14 +15,6 @@
 }
 
 
-
-
-.add-info {
-  justify-content: start;
-  list-style: none;
-  display: flex;
-}
-
 .left-side {
   display: flex;
   flex-direction: column;
@@ -42,4 +34,26 @@
   align-items: center;
   justify-content: center;
   
+}
+
+.name-basic-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    transition: color 0.2s;
+}
+
+.toggle-button:hover {
+    color: var(--color-text-dark);
 }

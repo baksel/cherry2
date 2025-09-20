@@ -1,16 +1,28 @@
 import './FuneralItem.css';
+import FuneralItemAddInfo from './FuneralItemAddInfo.js';
+import {useState} from 'react';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 
 function FuneralItem(item) {
-    const { funeral_provider, price, location, date, url } = item.item;
+    
+    const { funeral_provider, price, url } = item.item;
+    const [showMore, setShowMore] = useState(false);
+
     return (
         <div className="FuneralItem"> 
-            <div className="left-side">   
-                <h2> {funeral_provider} </h2>
-                <ul className="add-info">
-                    <li> {location} </li>
-                    <li> {date}     </li>
-                    
-                </ul>
+            <div className="left-side">
+               <div className="name-basic-container">
+                    <h3> {funeral_provider} </h3>
+                    <button
+                      className="toggle-button"
+                      onClick={() => setShowMore(!showMore)}
+                      aria-label={showMore ? "Näytä vähemmän": "Näytä lisää"}
+                    >
+                      {showMore ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+
+                    </button>
+               </div>    
+                    {showMore ? <FuneralItemAddInfo item={item.item}/> : null}
                 
             </div>
             <div className="right-side">
