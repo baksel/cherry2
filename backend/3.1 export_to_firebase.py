@@ -20,7 +20,7 @@ def upload_funeral_data(data : dict):
         
         for item in data:
             # Create a reference with auto-generated ID
-            doc_ref = db.collection("funeral_providers").document()
+            doc_ref = db.collection("funeral_providers_1").document()
             batch.set(doc_ref, item)
         
         # Commit the batch
@@ -33,3 +33,6 @@ with open(funeral_provider_export_path, "r", encoding="utf-8") as f:
     funeral_data = json.load(f)
 
     upload_funeral_data(funeral_data)
+
+
+
