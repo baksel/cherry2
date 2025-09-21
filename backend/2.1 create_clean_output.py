@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import os
 import ast
-from setup import DATE, RESULTS_DATE_PATH, FUNERAL_DIRECTOR_NAMES
+from setup import DATE, PROJECT_ROOT, RESULTS_DATE_PATH, FUNERAL_DIRECTOR_NAMES
 from pathlib import Path
 
 
@@ -19,6 +19,24 @@ data_types = {
 Path(f"{RESULTS_DATE_PATH}/cleaned").mkdir(parents=True, exist_ok=True)
 
 
+df_eng_to_fi_dictionary = pd.read_excel(f"{PROJECT_ROOT}/resources/field_dictionary_eng_to_fin.xlsx")
+
+eng_to_fi_dictionary : dict = dict( zip(df_eng_to_fi_dictionary["name_eng"], df_eng_to_fi_dictionary["name_fin"]) )
+
+
+def CreateAdditionalInfoDict(collected_items: list ) -> dict :
+    include_flags = { item_fi : item_eng in collected_items for item_eng, item_fi in eng_to_fi_dictionary.items() }
+    add_info = {  
+      key : {
+        "isIncluded" : value,
+        "AdditionalInfo" : "TBD"
+      } 
+      for key, value in include_flags.items()
+    }
+    return (add_info)
+
+  
+
 
 def ProcessRawPrices(name : str) -> pd.DataFrame | None:
     
@@ -33,11 +51,14 @@ def ProcessRawPrices(name : str) -> pd.DataFrame | None:
     individual_prices = data.get('individual_prices')
     total_row    = data.get('contains_items')
 
+    
+    total_row_add_info = CreateAdditionalInfoDict(total_row)
+
     if ( len(individual_prices) == 0 ):
         return
 
     df_total_row = pd.DataFrame(
-        {'items' : [total_row]}
+        {'items' : [total_row_add_info]}
     )
     
 
@@ -62,7 +83,6 @@ def ProcessRawPrices(name : str) -> pd.DataFrame | None:
     
     # Try converting to numeric
     try:
-        # Convert to numeric
       df_individual_prices['price'] = df_individual_prices['price'].astype(float)
         
     except ValueError:

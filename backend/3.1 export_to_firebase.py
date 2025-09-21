@@ -3,7 +3,7 @@ import requests
 import os
 import firebase_admin
 from setup import initialize_firebase, RESULTS_DATE_PATH
-
+import ast
 
 
 funeral_provider_export_path = f"{RESULTS_DATE_PATH}/cleaned/final_firebase_export_version.json"
@@ -12,13 +12,23 @@ funeral_provider_export_path = f"{RESULTS_DATE_PATH}/cleaned/final_firebase_expo
 # Define function for uploading data to firebase
 def upload_funeral_data(data : dict):
     db = initialize_firebase()
-    
+
+    def ConvertStringToDict(dict_item):
+
+        if dict_item['items']: #if not empty
+            # Convert string to dict
+            dict_item['items'] = ast.literal_eval( dict_item['items'])
+
+        return dict_item
 
     try:
         # Batch write for better performance
         batch = db.batch()
         
         for item in data:
+            # Convert "items" to a dict object -- it is stored as a string
+            item = ConvertStringToDict(item)
+
             # Create a reference with auto-generated ID
             doc_ref = db.collection("funeral_providers_1").document()
             batch.set(doc_ref, item)
