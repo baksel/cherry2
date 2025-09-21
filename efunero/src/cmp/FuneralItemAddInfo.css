@@ -1,8 +1,12 @@
-
-
 .add-info {
   justify-content: start;
   display: flex;
   flex-direction: column;
   align-items: start;
+}
+.add-info-items-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
 }

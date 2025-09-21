@@ -1,0 +1,17 @@
+
+
+.add-info-element {
+    display:flex;
+    justify-content: space-between;
+}
+.add-info-element-check {
+    color: #28a745;
+}
+
+.status-indicator.question {
+    color: #6c757d;
+}
+
+.add-info-element-cross {
+    color: #dc3545;
+}

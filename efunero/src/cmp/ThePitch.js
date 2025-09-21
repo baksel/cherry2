@@ -1,6 +1,6 @@
 import './ThePitch.css';
 import { useRef } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
+
 
 function ThePitch({ updateCurrentSearchValue }) {
     let tempCityHolder = useRef("Helsinki");

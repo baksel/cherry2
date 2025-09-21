@@ -29,7 +29,7 @@ def CreateAdditionalInfoDict(collected_items: list ) -> dict :
     add_info = {  
       key : {
         "isIncluded" : value,
-        "AdditionalInfo" : "TBD"
+        "additionalInfo" : "TBD"
       } 
       for key, value in include_flags.items()
     }
