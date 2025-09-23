@@ -22,7 +22,7 @@ function FuneralItem(item) {
 
                     </button>
                </div>    
-                    {showMore ? <FuneralItemAddInfo item={item.item}/> : null}
+                   
                 
             </div>
             <div className="right-side">
@@ -30,6 +30,7 @@ function FuneralItem(item) {
 
             </div>
             
+             {showMore ? <FuneralItemAddInfo item={item.item}/> : null}
             
             
         </div>

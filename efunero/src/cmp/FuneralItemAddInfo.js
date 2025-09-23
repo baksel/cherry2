@@ -7,7 +7,7 @@ function FuneralItemAddInfo(item) {
 
     return (
        <div className = "add-info"> 
-        <h4> Mitä hintaan sisältyy </h4>
+        <h4 id="price-includes-h4"> Mitä hintaan sisältyy </h4>
         <div className="add-info-items-list"> 
             {/* square brackets convert item to an array (and makes map work) */}
             
