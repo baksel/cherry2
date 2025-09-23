@@ -19,8 +19,8 @@ function FuneralItemAddInfo(item) {
     
         </div>
 
-        <li> Osoitetiedot: {address} </li>
-        <li id="phone-number"> Puhelinnumero: <a href={`tel:${Puhelinnumero}`}> {Puhelinnumero} </a> </li>
+        <div> <strong> Osoitetiedot:</strong> {address} </div>
+        <div id="phone-number"> <strong> Puhelinnumero: </strong> <a href={`tel:${Puhelinnumero}`}> {Puhelinnumero} </a> </div>
 
        </div>
     );
