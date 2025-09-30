@@ -9,4 +9,6 @@ efunero/src/config
 efunero/src/reportWebVitals.js
 *__pycache__*
 *$*
-./backend/results/
+
+/backend/results/
+/backend/resources/field_dictionary_eng_to_fin.xlsx
