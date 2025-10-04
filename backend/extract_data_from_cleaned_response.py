@@ -11,8 +11,6 @@ from setup import RESULTS_DATE_PATH, PROJECT_ROOT, FUNERAL_DIRECTOR_NAMES
 
 prompt_path = f"{PROJECT_ROOT}/resources/prompt_20250412.txt"
 
-deepseek_key = os.getenv("DEEPSEEK_API_KEY")
-qwen_key     = os.getenv("QWEN_API_KEY")
 
 
 example_input_path = f"{PROJECT_ROOT}/results/sample/output_cleaned_v2.json"
@@ -52,19 +50,20 @@ prompt_instructions_and_examples = [
     {"role": "assistant", "content": f"Example output: {json.dumps(example_output, ensure_ascii = False)}"}           
 ]
 
+
 client_deepseek = openai.Client(
-    api_key = deepseek_key,
+    api_key = os.getenv("DEEPSEEK_API_KEY"),
     base_url= "https://api.deepseek.com"
 )
 
 client_qwen    = openai.Client(
-    api_key  = qwen_key,
+    api_key  = os.getenv("QWEN_API_KEY"),
     base_url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
 )
 
 
 
-def ParseSingleMarkdown(funeral_director_name : str) -> None:
+def ParseMarkdownFiles(funeral_director_name : str) -> None:
 
   funeral_director_results_path = f"{RESULTS_DATE_PATH}/{funeral_director_name}"
   
@@ -110,4 +109,4 @@ def ParseSingleMarkdown(funeral_director_name : str) -> None:
       json.dump(funeral_director_content_parsed,f, ensure_ascii = False, indent = 4)
 
 
-content_parsed = [ParseSingleMarkdown(funeral_director_name) for funeral_director_name in FUNERAL_DIRECTOR_NAMES]
+#content_parsed = [ParseSingleMarkdown(funeral_director_name) for funeral_director_name in FUNERAL_DIRECTOR_NAMES]
