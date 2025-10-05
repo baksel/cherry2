@@ -1,5 +1,6 @@
  # import requests
 import pandas as pd
+from pandas import DataFrame
 import requests
 from time import sleep
 from pathlib import Path
@@ -13,7 +14,8 @@ from datetime import datetime
 funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_directory.xlsx"
 
 # Get current date, in YYYY_MM_DD format
-scrape_date = datetime.today().strftime('%Y_%m_%d')
+#scrape_date = datetime.today().strftime('%Y_%m_%d')
+scrape_date = "2025_09_08"
 
 
 headers = {
@@ -52,7 +54,7 @@ spaces_underscored = [str.replace(x, " ", "_") for x in funeral_providers_raw.co
 # Replace column names
 funeral_providers_raw.columns = spaces_underscored
 
-funeral_providers = funeral_providers_raw.copy()
+funeral_providers : DataFrame = funeral_providers_raw.copy()
 
 # Remove all spaces
 funeral_providers['Urls_to_scrape'] = funeral_providers['Urls_to_scrape'].str.replace(' ', "")
@@ -67,8 +69,12 @@ funeral_providers['Urls_to_scrape'] = funeral_providers['Urls_to_scrape'].apply(
 
 
 
+funeral_providers_urls_to_scrape : dict = funeral_providers["Urls_to_scrape"].to_dict()
 
-def ScrapeUrls(firm_name, url_list):
+
+
+def ScrapeUrls(firm_name : str, url_list: list) -> None:
+
     # We only get the contents of the html response in this file. Processing of the html is done in another file.
     def ScrapeSingleUrl(url):        
         request = requests.get(
@@ -90,7 +96,6 @@ def ScrapeUrls(firm_name, url_list):
 
     html_responses = { url: ScrapeSingleUrl(url) for url in url_list if url != '' } # the if statement flag empty,''-entries
 
-    #X = html_responses['https://hautaus-mononen.fi/esimerkkikokonaisuuksia'].json()
 
     # Extract text of html responses
     html_responses_content = {url: html_response.text for url, html_response in html_responses.items()}
@@ -101,10 +106,8 @@ def ScrapeUrls(firm_name, url_list):
     sleep(1) 
     
 
-    return 1
-
-
+    
 # Scrape all urls for all firms
 firm_html_responses = {
-   firm_name : ScrapeUrls(firm_name, url_list) for firm_name, url_list in zip(funeral_providers.index, funeral_providers["Urls_to_scrape"])
+   firm_name : ScrapeUrls(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items())
 }
