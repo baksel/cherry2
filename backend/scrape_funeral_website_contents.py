@@ -86,7 +86,8 @@ def ScrapeUrls(firm_name : str, url_list: list) -> None:
         # Create folder if doesn't exist
         Path(f"{PROJECT_ROOT}/results/{scrape_date}/{firm_name}").mkdir(parents=True, exist_ok=True)
 
-        with open(f"{PROJECT_ROOT}/results/{scrape_date}/{firm_name}/_output.json", 'w+', encoding = 'utf-8') as f:
+        # Save
+        with open(f"{PROJECT_ROOT}/results/{scrape_date}/{firm_name}/raw_get_responses.json", 'w+', encoding = 'utf-8') as f:
             json.dump(html_responses_content, f, ensure_ascii = False, indent = 4)
             
 
@@ -109,5 +110,5 @@ def ScrapeUrls(firm_name : str, url_list: list) -> None:
     
 # Scrape all urls for all firms
 firm_html_responses = {
-   firm_name : ScrapeUrls(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items())
+   firm_name : ScrapeUrls(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items()
 }

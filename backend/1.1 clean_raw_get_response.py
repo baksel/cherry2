@@ -7,11 +7,11 @@ from crawl4ai.async_crawler_strategy import AsyncPlaywrightCrawlerStrategy
 from crawl4ai.browser_manager import BrowserManager
 import os
 import json
- 
-from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DATE_PATH
+from time import sleep 
+from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR
+import time
 
 
-input_paths = [f"{RESULTS_DATE_PATH}/{funeral_provider_name}" for funeral_provider_name in FUNERAL_DIRECTOR_NAMES]
 
 
 run_config = CrawlerRunConfig(
@@ -54,12 +54,7 @@ AsyncPlaywrightCrawlerStrategy.close = patched_async_playwright__crawler_strateg
 
 ########################################################################################
 
-
-
-
-
-
-async def CleanHTML(html_content, crawler):
+async def CleanHTML(html_content, crawler : AsyncWebCrawler):
     
   
   result = await crawler.arun(
@@ -70,41 +65,66 @@ async def CleanHTML(html_content, crawler):
   return html_converted_to_markdown
 
 # Process Funeral providers output json file. The json file follows {url : Raw HTML} format. One file might have many entries
-
-async def ProcessFuneralContents(funeral_provider_html_path, crawler):
+async def ProcessFuneralContents(html_folder : str, crawler : AsyncWebCrawler) -> None:
     
-    input_full_path  = f"{funeral_provider_html_path}/_output.json"
-    #funeral_provider_full_path = f"{funeral_provider_output_path}/Helsingin Hautaustoimisto/raw_html.txt"
-    #toMatch = f"{funeral_provider_output_path}/Helsingin Hautaustoimisto/_output.json"
+    input_full_path  = f"{html_folder}/_output.json"
+    
     
     with open(input_full_path, encoding = 'utf-8') as f:
-      # if funeral_provider_full_path == toMatch:
-      #   print(1)
       content : dict= json.load(f)
-      #content = 2
-      #html_content = f.read()
       
-    #x = await CleanHTML(html_content, crawler)
     htmls_cleaned = {url : await CleanHTML(html_content, crawler)  for url, html_content in content.items()}
 
 
     # Export cleaned markdown contents
-    with open(f"{funeral_provider_html_path}/output_cleaned.json", "w+", encoding = 'utf-8') as f:
+    with open(f"{html_folder}/output_cleaned.json", "w+", encoding = 'utf-8') as f:
         json.dump(htmls_cleaned,f, ensure_ascii = False, indent = 4)
 
 
-async def main(funeral_provider_html_paths):
+async def main(fd_paths_to_html_response : list[str] | str):
   
+  # Convert to list if a string, as the for-loop below only works if object is a list
+  if type(fd_paths_to_html_response) is str:
+     
+     fd_paths_to_html_response : list = [fd_paths_to_html_response]
+
   crawler = AsyncWebCrawler()
+
   await crawler.start()
 
   # Iterate over each company
-  for funeral_provider_html_path in funeral_provider_html_paths:
-     await ProcessFuneralContents(funeral_provider_html_path, crawler)
+  await asyncio.gather(
+    *( ProcessFuneralContents(fd_html_res_path, crawler) for fd_html_res_path in fd_paths_to_html_response)
+  )
+  
+  
+  
      
   await crawler.close()
 
 
+def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
+   """
+     Produce a clean markdown file from the raw HTML response file. The file(s)  contains the price information for a specific funeral director.
+     
+     
+     Args:
+       fd_names: funeral director(s) that are to be cleaned
+       date  (YYYY_MM_DD)  : the date when prices were collected. NB: there the data for the funeral director must be stored inside a specific folder w/ the
+         date suffix/prefix.  
 
-if __name__ == "__main__":
-    asyncio.run(main(input_paths))
+     Returns: None. The function saves cleaned markdown files under the date folder.
+   """
+
+   input_paths = [f"{RESULTS_DIR}/{date}/{funeral_provider_name}" 
+                  for funeral_provider_name in FUNERAL_DIRECTOR_NAMES
+                  if funeral_provider_name in fd_names]
+   
+   # Begin event-loop
+   asyncio.run( main(input_paths) )
+   
+   
+
+
+    
+CleanRawGetResponse( ["Hautaustoimisto Toro", "eHautaus"], "2025_09_08") 
