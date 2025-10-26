@@ -1,10 +1,12 @@
 import asyncio
 from crawl4ai import (
     AsyncWebCrawler,
-    CrawlerRunConfig
+    CrawlerRunConfig,
+    BrowserConfig
 )
 from crawl4ai.async_crawler_strategy import AsyncPlaywrightCrawlerStrategy
 from crawl4ai.browser_manager import BrowserManager
+
 import os
 import json
 from time import sleep 
@@ -21,6 +23,8 @@ run_config = CrawlerRunConfig(
         remove_forms=True,
         exclude_social_media_links=True,
         exclude_external_links=True,
+        log_console = False,
+        verbose=False
         #remove_overlay_elements=True,
         #magic=True,
         #simulate_user=True,
@@ -28,6 +32,9 @@ run_config = CrawlerRunConfig(
         #verbose=True,
     )
 
+browser_config = BrowserConfig(
+   verbose=False
+)
 
 ########################### MONKEY PATCH ######################################
 
@@ -77,7 +84,7 @@ async def ProcessFuneralContents(html_folder : str, crawler : AsyncWebCrawler) -
 
 
     # Export cleaned markdown contents
-    with open(f"{html_folder}/output_cleaned.json", "w+", encoding = 'utf-8') as f:
+    with open(f"{html_folder}/raw_response_cleaned.json", "w+", encoding = 'utf-8') as f:
         json.dump(htmls_cleaned,f, ensure_ascii = False, indent = 4)
 
 
@@ -88,7 +95,7 @@ async def main(fd_paths_to_html_response : list[str] | str):
      
      fd_paths_to_html_response : list = [fd_paths_to_html_response]
 
-  crawler = AsyncWebCrawler()
+  crawler = AsyncWebCrawler( config=browser_config)
 
   await crawler.start()
 
@@ -127,4 +134,4 @@ def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
 
 
     
-CleanRawGetResponse( ["Hautaustoimisto Toro", "eHautaus"], "2025_09_08") 
+CleanRawGetResponse( fd_names = "Hautauspalvelu Kielonkukka", date = "2025_09_08") 

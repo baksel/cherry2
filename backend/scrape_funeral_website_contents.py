@@ -15,7 +15,7 @@ funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_di
 
 # Get current date, in YYYY_MM_DD format
 #scrape_date = datetime.today().strftime('%Y_%m_%d')
-scrape_date = "2025_09_08"
+scrape_date = "2025_09_08" # Hard-coded for now
 
 
 headers = {
