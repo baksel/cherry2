@@ -88,29 +88,10 @@ async def ProcessFuneralContents(html_folder : str, crawler : AsyncWebCrawler) -
         json.dump(htmls_cleaned,f, ensure_ascii = False, indent = 4)
 
 
-async def main(fd_paths_to_html_response : list[str] | str):
+
   
-  # Convert to list if a string, as the for-loop below only works if object is a list
-  if type(fd_paths_to_html_response) is str:
-     
-     fd_paths_to_html_response : list = [fd_paths_to_html_response]
-
-  crawler = AsyncWebCrawler( config=browser_config)
-
-  await crawler.start()
-
-  # Iterate over each company
-  await asyncio.gather(
-    *( ProcessFuneralContents(fd_html_res_path, crawler) for fd_html_res_path in fd_paths_to_html_response)
-  )
-  
-  
-  
-     
-  await crawler.close()
-
-
-def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
+async def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
+   
    """
      Produce a clean markdown file from the raw HTML response file. The file(s)  contains the price information for a specific funeral director.
      
@@ -127,11 +108,19 @@ def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
                   for funeral_provider_name in FUNERAL_DIRECTOR_NAMES
                   if funeral_provider_name in fd_names]
    
-   # Begin event-loop
-   asyncio.run( main(input_paths) )
-   
-   
+     # Convert to list if a string, as the for-loop below only works if object is a list
+   if type(input_paths) is str:
+     
+     input_paths : list = [input_paths]
 
+   crawler = AsyncWebCrawler( config=browser_config)
 
-    
-CleanRawGetResponse( fd_names = "Mikko Mononen", date = "2025_09_08") 
+   await crawler.start()
+
+   # Iterate over each company
+   await asyncio.gather(
+    *( ProcessFuneralContents(fd_html_res_path, crawler) for fd_html_res_path in input_paths)
+   )
+
+   await crawler.close()
+   

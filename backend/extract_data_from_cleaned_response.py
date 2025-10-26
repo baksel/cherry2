@@ -68,7 +68,7 @@ def ParseMarkdownFiles(funeral_director_name : str) -> None:
   funeral_director_results_path = f"{RESULTS_DATE_PATH}/{funeral_director_name}"
   
   # Default file we read
-  extension = "output_cleaned"
+  extension = "raw_response_cleaned"
   # We read _output.json file whenever markdown file is problematic, i.e., too large or doesn't have all data (sometimes the .markdown omits some elements from raw HTML)
   # if funeral_director_name in problematic_funeral_directors:
   #    extension = "_output"
