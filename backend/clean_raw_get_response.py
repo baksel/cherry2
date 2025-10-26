@@ -134,4 +134,4 @@ def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
 
 
     
-CleanRawGetResponse( fd_names = "Hautauspalvelu Kielonkukka", date = "2025_09_08") 
+CleanRawGetResponse( fd_names = "Mikko Mononen", date = "2025_09_08") 
