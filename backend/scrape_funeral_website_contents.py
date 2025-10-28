@@ -8,14 +8,14 @@ import brotli
 import json
 from setup import PROJECT_ROOT
 from datetime import datetime
-
-
+import asyncio
+import time
 
 funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_directory.xlsx"
 
 # Get current date, in YYYY_MM_DD format
-#scrape_date = datetime.today().strftime('%Y_%m_%d')
-scrape_date = "2025_09_08" # Hard-coded for now
+scrape_date = datetime.today().strftime('%Y_%m_%d')
+#scrape_date = "2025_09_08" # Hard-coded for now
 
 
 headers = {
@@ -73,42 +73,67 @@ funeral_providers_urls_to_scrape : dict = funeral_providers["Urls_to_scrape"].to
 
 
 
-def ScrapeUrls(firm_name : str, url_list: list) -> None:
+async def ScrapeCompanyData(firm_name : str, url_list: list) -> None:
 
     # We only get the contents of the html response in this file. Processing of the html is done in another file.
-    def ScrapeSingleUrl(url):        
+    async def ScrapeSingleUrl(url):        
         request = requests.get(
           url     = url,
           headers = headers
         )
+
+        await asyncio.sleep(1)
         return request
-    def ExportHTMLOutput(html_responses_content):
+    def ExportHTMLOutput(html_response_dict : dict):
+        """ 
+        Exports HTML Output as a json file
+
+        arg:
+          html_response_dict: is firm-specific, url-html key-value dict
+        
+        """
         # Create folder if doesn't exist
         Path(f"{PROJECT_ROOT}/results/{scrape_date}/{firm_name}").mkdir(parents=True, exist_ok=True)
 
         # Save
         with open(f"{PROJECT_ROOT}/results/{scrape_date}/{firm_name}/raw_get_responses.json", 'w+', encoding = 'utf-8') as f:
-            json.dump(html_responses_content, f, ensure_ascii = False, indent = 4)
+            json.dump(html_response_dict, f, ensure_ascii = False, indent = 4)
             
 
     # Do not process if list is empty (this only flags if the list is completely empty; not if list contains empty, and non-empty elements)
     if len( url_list ) == 0:
         return None
+    
 
-    html_responses = { url: ScrapeSingleUrl(url) for url in url_list if url != '' } # the if statement flag empty,''-entries
+    tasks = [ScrapeSingleUrl(url) for url in url_list if url != '' ] # Don't process empty-urls
 
+    valid_urls = [ url for url in url_list if url != "" ]
 
-    # Extract text of html responses
-    html_responses_content = {url: html_response.text for url, html_response in html_responses.items()}
+    
+    html_responses = await asyncio.gather(
+        *(tasks)
+    )
+    # All url and data into one dict for a company
+    firm_html_response_dict : dict = {
+        url : html_response.text for (url, html_response) in zip(valid_urls, html_responses)
+    }
+
  
-    ExportHTMLOutput(html_responses_content)
-
-    # [ExportHTMLOutput(i, html_response) for i, html_response in enumerate(html_responses.values())]
-    sleep(1) 
+    ExportHTMLOutput(firm_html_response_dict)
+    
     
 
-    
-# Scrape all urls for all firms
-firm_html_responses = {
-   firm_name : ScrapeUrls(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items()
-}
+
+async def main():
+  # Scrape all urls for all firms
+  start_time = time.time()
+  await asyncio.gather(
+    *(ScrapeCompanyData(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items() )   
+  )
+
+
+   
+   
+
+if __name__ == "__main__":
+    asyncio.run( main() )
