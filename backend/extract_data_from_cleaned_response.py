@@ -9,7 +9,7 @@ from setup import RESULTS_DATE_PATH, PROJECT_ROOT, FUNERAL_DIRECTOR_NAMES
 
 ########### SETUP
 
-prompt_path = f"{PROJECT_ROOT}/resources/prompt_20250412.txt"
+prompt_path = f"{PROJECT_ROOT}/resources/prompt_20251026.txt"
 
 
 
@@ -69,7 +69,7 @@ def ParseMarkdownFiles(funeral_director_name : str) -> None:
   
   # Default file we read
   extension = "raw_response_cleaned"
-  # We read _output.json file whenever markdown file is problematic, i.e., too large or doesn't have all data (sometimes the .markdown omits some elements from raw HTML)
+  # We read raw_response_cleaned.json file whenever markdown file is problematic, i.e., too large or doesn't have all data (sometimes the .markdown omits some elements from raw HTML)
   # if funeral_director_name in problematic_funeral_directors:
   #    extension = "_output"
 
@@ -105,7 +105,7 @@ def ParseMarkdownFiles(funeral_director_name : str) -> None:
   funeral_director_content_parsed = deepseek_response.choices[0].message.content
   funeral_director_content_parsed = json.loads(funeral_director_content_parsed)
   # Export parsed data
-  with open(f"{funeral_director_results_path}/prices_raw_2.json", "w+", encoding = 'utf-8') as f:
+  with open(f"{funeral_director_results_path}/prices_raw.json", "w+", encoding = 'utf-8') as f:
       json.dump(funeral_director_content_parsed,f, ensure_ascii = False, indent = 4)
 
 

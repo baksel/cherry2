@@ -121,8 +121,6 @@ async def ScrapeCompanyData(firm_name : str, url_list: list) -> None:
  
     ExportHTMLOutput(firm_html_response_dict)
     
-    
-
 
 async def main():
   # Scrape all urls for all firms
@@ -130,10 +128,6 @@ async def main():
   await asyncio.gather(
     *(ScrapeCompanyData(firm_name, url_list) for firm_name, url_list in funeral_providers_urls_to_scrape.items() )   
   )
-
-
-   
-   
 
 if __name__ == "__main__":
     asyncio.run( main() )

@@ -13,6 +13,10 @@ from time import sleep
 from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR
 import time
 
+fds_to_clean : list[str] = ['eHautaus', 'Hautaushuolto', 'Hautauspalvelu Kielonkukka',
+                          'Hautaustoimisto Kaarna', 'Itä-Helsingin Hautauspalvelu', 'Kauhanen',
+                          'Kyllikki ja Petri Forsius', 'Malmin Hautaustoimisto', 'Mikko Mononen'
+]
 
 
 
@@ -38,25 +42,25 @@ browser_config = BrowserConfig(
 
 ########################### MONKEY PATCH ######################################
 
-async def patched_async_playwright__crawler_strategy_close(self) -> None:
-    """
-    Close the browser and clean up resources.
+# async def patched_async_playwright__crawler_strategy_close(self) -> None:
+#     """
+#     Close the browser and clean up resources.
 
-    This patch addresses an issue with Playwright instance cleanup where the static instance
-    wasn't being properly reset, leading to issues with multiple crawls.
+#     This patch addresses an issue with Playwright instance cleanup where the static instance
+#     wasn't being properly reset, leading to issues with multiple crawls.
 
-    Issue: https://github.com/unclecode/crawl4ai/issues/842
+#     Issue: https://github.com/unclecode/crawl4ai/issues/842
 
-    Returns:
-        None
-    """
-    await self.browser_manager.close()
+#     Returns:
+#         None
+#     """
+#     await self.browser_manager.close()
 
-    # Reset the static Playwright instance
-    BrowserManager._playwright_instance = None
+#     # Reset the static Playwright instance
+#     BrowserManager._playwright_instance = None
 
 
-AsyncPlaywrightCrawlerStrategy.close = patched_async_playwright__crawler_strategy_close
+# AsyncPlaywrightCrawlerStrategy.close = patched_async_playwright__crawler_strategy_close
 
 
 ########################################################################################
@@ -66,7 +70,9 @@ async def CleanHTML(html_content, crawler : AsyncWebCrawler):
   
   result = await crawler.arun(
     url    = f"raw:{html_content}",
-    config = run_config)
+    config = run_config
+  )
+
   html_converted_to_markdown = result.markdown
 
   return html_converted_to_markdown
@@ -74,7 +80,7 @@ async def CleanHTML(html_content, crawler : AsyncWebCrawler):
 # Process Funeral providers output json file. The json file follows {url : Raw HTML} format. One file might have many entries
 async def ProcessFuneralContents(html_folder : str, crawler : AsyncWebCrawler) -> None:
     
-    input_full_path  = f"{html_folder}/_output.json"
+    input_full_path  = f"{html_folder}/raw_get_responses.json"
     
     
     with open(input_full_path, encoding = 'utf-8') as f:
@@ -124,3 +130,9 @@ async def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
 
    await crawler.close()
    
+task = CleanRawGetResponse(fds_to_clean, "2025_10_28")
+
+
+asyncio.run(
+   task
+)
