@@ -4,14 +4,10 @@ from crawl4ai import (
     CrawlerRunConfig,
     BrowserConfig
 )
-from crawl4ai.async_crawler_strategy import AsyncPlaywrightCrawlerStrategy
-from crawl4ai.browser_manager import BrowserManager
-
 import os
 import json
-from time import sleep 
 from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR, FDS_TO_CLEAN
-import time
+
 
 
 
@@ -25,7 +21,7 @@ run_config = CrawlerRunConfig(
         exclude_social_media_links=True,
         exclude_external_links=True,
         log_console = False,
-        verbose=False
+        verbose=False #turnoff all messages to stdin >> can't have it for MCP
         #remove_overlay_elements=True,
         #magic=True,
         #simulate_user=True,
@@ -34,33 +30,10 @@ run_config = CrawlerRunConfig(
     )
 
 browser_config = BrowserConfig(
-   verbose=False
+   verbose=False #turnoff all messages to stdin >> can't have it for MCP
 )
 
-########################### MONKEY PATCH ######################################
 
-# async def patched_async_playwright__crawler_strategy_close(self) -> None:
-#     """
-#     Close the browser and clean up resources.
-
-#     This patch addresses an issue with Playwright instance cleanup where the static instance
-#     wasn't being properly reset, leading to issues with multiple crawls.
-
-#     Issue: https://github.com/unclecode/crawl4ai/issues/842
-
-#     Returns:
-#         None
-#     """
-#     await self.browser_manager.close()
-
-#     # Reset the static Playwright instance
-#     BrowserManager._playwright_instance = None
-
-
-# AsyncPlaywrightCrawlerStrategy.close = patched_async_playwright__crawler_strategy_close
-
-
-########################################################################################
 
 async def CleanHTML(html_content, crawler : AsyncWebCrawler):
     
@@ -126,10 +99,3 @@ async def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
    )
 
    await crawler.close()
-   
-# task = CleanRawGetResponse(fds_to_clean, "2025_10_28")
-
-
-# asyncio.run(
-#    task
-# )
