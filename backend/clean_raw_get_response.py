@@ -10,13 +10,10 @@ from crawl4ai.browser_manager import BrowserManager
 import os
 import json
 from time import sleep 
-from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR
+from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR, FDS_TO_CLEAN
 import time
 
-fds_to_clean : list[str] = ['eHautaus', 'Hautaushuolto', 'Hautauspalvelu Kielonkukka',
-                          'Hautaustoimisto Kaarna', 'Itä-Helsingin Hautauspalvelu', 'Kauhanen',
-                          'Kyllikki ja Petri Forsius', 'Malmin Hautaustoimisto', 'Mikko Mononen'
-]
+
 
 
 
@@ -130,9 +127,9 @@ async def CleanRawGetResponse(fd_names : str | list, date : str) -> None:
 
    await crawler.close()
    
-task = CleanRawGetResponse(fds_to_clean, "2025_10_28")
+# task = CleanRawGetResponse(fds_to_clean, "2025_10_28")
 
 
-asyncio.run(
-   task
-)
+# asyncio.run(
+#    task
+# )
