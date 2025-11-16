@@ -6,8 +6,11 @@ from setup import PROJECT_ROOT
 
 
 
-def CreateMasterDataForExport(RESULTS_DATE_PATH) -> None:
-    funeral_provider_clean_prices_path = f"{RESULTS_DATE_PATH}/cleaned/funeral_provider_prices_clean.csv"
+def CreateMasterFileForExport(DATE) -> None:
+
+    RESULTS_DATE_PATH = f"{PROJECT_ROOT}/results/{DATE}"
+
+    funeral_provider_clean_prices_path = f"{RESULTS_DATE_PATH}/cleaned/clean_prices.csv"
 
     funeral_provider_directory_path = f"{PROJECT_ROOT}/resources/funeral_provider_directory.xlsx"
 

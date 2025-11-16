@@ -2,15 +2,12 @@ import json
 import requests
 import os
 import firebase_admin
-from setup import initialize_firebase, RESULTS_DATE_PATH
+from setup import initialize_firebase, PROJECT_ROOT
 import ast
 
 
-funeral_provider_export_path = f"{RESULTS_DATE_PATH}/cleaned/final_firebase_export_version.json"
-
-
 # Define function for uploading data to firebase
-def upload_funeral_data(data : dict):
+def upload_to_firebase(data : dict):
     db = initialize_firebase()
 
     def ConvertStringToDict(dict_item):
@@ -38,11 +35,17 @@ def upload_funeral_data(data : dict):
     finally:
         firebase_admin.delete_app(firebase_admin.get_app())
 
-# Load JSON data
-with open(funeral_provider_export_path, "r", encoding="utf-8") as f:
-    funeral_data = json.load(f)
-
-    upload_funeral_data(funeral_data)
 
 
 
+
+
+def ExportMasterFileToFirebase( DATE : str) -> None: 
+    funeral_provider_export_path = f"{PROJECT_ROOT}/results/{DATE}/cleaned/final_firebase_export_version.json"
+
+    # Load masterfile
+    with open(funeral_provider_export_path, "r", encoding="utf-8") as f:
+      funeral_data = json.load(f)
+
+
+    upload_to_firebase(funeral_data)

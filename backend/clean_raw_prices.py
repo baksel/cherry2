@@ -1,8 +1,6 @@
 import pandas as pd
 import json
-import os
-import ast
-from setup import DATE, PROJECT_ROOT
+from setup import PROJECT_ROOT
 from pathlib import Path
 
 
@@ -24,15 +22,17 @@ def CreateAdditionalInfoDict(collected_items: list ) -> dict :
     return (add_info)
 
 
-def ProcessRawPrices(name : str, results_path) -> pd.DataFrame | None:
+def ProcessRawPricesForACompany(name : str, DATE : str) -> pd.DataFrame | None:
+
+    results_date_path = f"{PROJECT_ROOT}/results/{DATE}"
 
     # Add specification to LLM instructions on how to treat missing values
     NA_VALUES = ["NA", None, "", "Nan", "0"]
 
     # Create output directory for cleaned and merged prices, if it doesn't exist
-    Path(f"{results_path}/cleaned").mkdir(parents=True, exist_ok=True)
+    Path(f"{results_date_path}/cleaned").mkdir(parents=True, exist_ok=True)
     
-    results_path = f"{results_path}/{name}"
+    results_path = f"{results_date_path}/{name}"
     
     # Read the JSON file
     json_file_path = f"{results_path}/prices_raw.json"
@@ -113,12 +113,26 @@ def ProcessRawPrices(name : str, results_path) -> pd.DataFrame | None:
     )
 
     df_final.to_csv(
-    path_or_buf = f"{results_path}/cleaned/{name}_prices_clean.csv",
+    path_or_buf = f"{results_date_path}/cleaned/{name}_prices_clean.csv",
+    sep         = ";",
+    index       = False,
+    )
+    
+    return df_final
+
+    
+def ProcessRawPricesForAllCompanies(fd_names : list[str], DATE : str) -> None:
+
+    prices_cleaned : pd.DataFrame = [ProcessRawPricesForACompany(fd_name, DATE) for fd_name in fd_names]
+
+    prices_merged = pd.concat(prices_cleaned)
+
+    prices_merged.to_csv(
+    path_or_buf = f"{PROJECT_ROOT}/results/{DATE}/cleaned/clean_prices.csv",
     sep         = ";",
     index       = False,
     )
 
-    
 
 
 
@@ -126,6 +140,3 @@ def ProcessRawPrices(name : str, results_path) -> pd.DataFrame | None:
 
 
 
-# DONE IN NEXT STEP, THE FINAL STEP
-# Read all 
-#df_funeral_providers_final = pd.concat(df_funeral_providers)
