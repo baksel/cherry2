@@ -4,7 +4,7 @@ import os
 import json
 import time
 import tiktoken
-from setup import RESULTS_DATE_PATH, PROJECT_ROOT, FDS_TO_CLEAN, DATE
+from setup import PROJECT_ROOT 
 import glob
 import re
 
@@ -14,10 +14,11 @@ prompt_path = f"{PROJECT_ROOT}/resources/prompt_20251026.txt"
    
 example_input_path = f"{PROJECT_ROOT}/results/sample/output_cleaned_v2.json"
 
-
 last_prices_instruction = """See below the results we obtained last time for the funeral director. 
 Use it as your reference, to cross-check whether the prices you have extracted are of the same magnitude / make sense given the past prices,
 to guide selection"""
+
+
 
 example_output = { 
   "total": 1840, 
@@ -47,15 +48,20 @@ def ReadFile( path : str) -> str:
 
   return file_contents
 
- 
-markdown_parse_instructions = ReadFile(prompt_path)
-sample_input_kyllikki = ReadFile(example_input_path)
 
-prompt_instructions_and_examples = [
+def PrepareLLMPrompt():
+  markdown_parse_instructions = ReadFile(prompt_path)
+  sample_input_kyllikki = ReadFile(example_input_path)
+
+  prompt_instructions_and_examples = [
     {"role": "system", "content": markdown_parse_instructions}, 
     {"role": "user", "content": f"Example input: {json.dumps(sample_input_kyllikki, ensure_ascii = False)}"}, 
     {"role": "assistant", "content": f"Example output: {json.dumps(example_output, ensure_ascii = False)}"}           
-]
+    ]
+  
+  return prompt_instructions_and_examples
+
+
 
 
 client_deepseek : openai.Client = openai.Client(
@@ -70,94 +76,98 @@ client_qwen : openai.Client    = openai.Client(
 
 
 
-def ParseMarkdownFiles(fd_name : str) -> None:
+
+def ParseMarkdownFilesForAllCompanies(fd_names : list[str], FOLDER_DATE : str ) -> None:
+   
+
+   prompt_instructions_and_examples = PrepareLLMPrompt()
+   
+   def ParseMarkdownFilesForACompany(fd_name : str, DATE : str) -> None:
+  
+
+    funeral_director_results_path = f"{PROJECT_ROOT}/results/{DATE}/{fd_name}"
+
+    def GetPricesExtractedLastTime() -> str:
+        # list of all price folders where the funeral director was included
+        all_prices_paths = glob.glob(
+            f"{PROJECT_ROOT}/results/*/{fd_name}"
+        )
+      
+        # Extracts the DATE part from the path; "dirty" result w/ back- and forwardslashes
+        dates_extracted_dirty = [ path.partition("results")[2].partition(fd_name)[0] for path in all_prices_paths ]
+        
+        dates_extracted = [ date_dirty.replace("\\", "").replace("/", "") for date_dirty in dates_extracted_dirty]
+
+        dates_extracted.sort()
+
+      # Get the index of the current date 
+        curr_date_idx = dates_extracted.index(
+          DATE
+        )
+        
+      
+        prices_extracted_last_time_path = all_prices_paths[ curr_date_idx - 1 ]
+          
+        return prices_extracted_last_time_path
+
+    path_of_last_results : str = GetPricesExtractedLastTime()
+
+    last_extracted_prices : str = ReadFile( f"{path_of_last_results}/prices_raw.json" )
+
+    last_extracted_prices : dict = json.loads( last_extracted_prices )
 
 
-  funeral_director_results_path = f"{RESULTS_DATE_PATH}/{fd_name}"
 
-  def GetPricesExtractedLastTime() -> str:
-     # list of all price folders where the funeral director was included
-     all_prices_paths = glob.glob(
-         f"{PROJECT_ROOT}/results/*/{fd_name}"
+    # Default file we read
+    extension = "raw_response_cleaned"
+    # We read raw_response_cleaned.json file whenever markdown file is problematic, i.e., too large or doesn't have all data (sometimes the .markdown omits some elements from raw HTML)
+    # if funeral_director_name in problematic_funeral_directors:
+    #    extension = "_output"
+
+    funeral_director_content : str = ReadFile( f"{funeral_director_results_path}/{extension}.json")
+    funeral_director_content : dict = json.loads( funeral_director_content )
+
+
+    instruction = prompt_instructions_and_examples.copy()  
+
+
+    # Add last results as background to prompt for reference
+    instruction.append(
+      {"role": "user", "content": f"{last_prices_instruction}: {json.dumps(last_extracted_prices, ensure_ascii = False)}"}
       )
-    
-     # Extracts the DATE part from the path; "dirty" result w/ back- and forwardslashes
-     dates_extracted_dirty = [ path.partition("results")[2].partition(fd_name)[0] for path in all_prices_paths ]
-     
-     dates_extracted = [ date_dirty.replace("\\", "").replace("/", "") for date_dirty in dates_extracted_dirty]
 
-     dates_extracted.sort()
-
-    # Get the index of the current date 
-     curr_date_idx = dates_extracted.index(
-        DATE
-        
-     )
-     
-    
-     prices_extracted_last_time_path = all_prices_paths[ curr_date_idx - 1 ]
-        
-     return prices_extracted_last_time_path
-
-  path_of_last_results : str = GetPricesExtractedLastTime()
-
-  last_extracted_prices : str = ReadFile( f"{path_of_last_results}/prices_raw_2.json" )
-
-  last_extracted_prices : dict = json.loads( last_extracted_prices )
-  
-  
-  
-  # Default file we read
-  extension = "raw_response_cleaned"
-  # We read raw_response_cleaned.json file whenever markdown file is problematic, i.e., too large or doesn't have all data (sometimes the .markdown omits some elements from raw HTML)
-  # if funeral_director_name in problematic_funeral_directors:
-  #    extension = "_output"
-
-  funeral_director_content : str = ReadFile( f"{funeral_director_results_path}/{extension}.json")
-  funeral_director_content : dict = json.loads( funeral_director_content )
+    # Add markdown content to LLM's instructions
+    instruction.append(
+      {"role": "user", "content": f"Process this input: {json.dumps(funeral_director_content, ensure_ascii = False)}"}
+      )
 
 
-  instruction = prompt_instructions_and_examples.copy()  
-  
-# Add last results as background to prompt for reference
-  instruction.append(
-    {"role": "user", "content": f"{last_prices_instruction}: {json.dumps(last_extracted_prices, ensure_ascii = False)}"}
-    )
 
-  # Add markdown content to LLM's instructions
-  instruction.append(
-    {"role": "user", "content": f"Process this input: {json.dumps(funeral_director_content, ensure_ascii = False)}"}
-    )
-  
-  
+    number_of_tokens = num_tokens_from_string(json.dumps(instruction, ensure_ascii = False), "cl100k_base")
 
-  number_of_tokens = num_tokens_from_string(json.dumps(instruction, ensure_ascii = False), "cl100k_base")
-  
-  if ( number_of_tokens > 65536 ): 
-    client : openai.client = client_qwen
-    model  = "qwen-turbo"
-  
-  else:
-    client : openai.client = client_deepseek
-    model  = "deepseek-chat"
-  
- 
-  # Parse price information from markdown contents
-  deepseek_response = client.chat.completions.create(
-    model           = model,
-    messages        = instruction,
-    response_format = { 'type' : "json_object" },
-    temperature     = 0.0
-    )
-  
-  funeral_director_content_parsed = deepseek_response.choices[0].message.content
-  funeral_director_content_parsed = json.loads(funeral_director_content_parsed)
-  # Export parsed data
-  with open(f"{funeral_director_results_path}/prices_raw.json", "w+", encoding = 'utf-8') as f:
-      json.dump(funeral_director_content_parsed,f, ensure_ascii = False, indent = 4)
+    if ( number_of_tokens > 65536 ): 
+      client : openai.client = client_qwen
+      model  = "qwen-turbo"
 
-content_parsed = [ParseMarkdownFiles(funeral_director_name) for funeral_director_name in FDS_TO_CLEAN]
+    else:
+      client : openai.client = client_deepseek
+      model  = "deepseek-chat"
 
 
-#ParseMarkdownFiles("eHautaus") 
+    # Parse price information from markdown contents
+    deepseek_response = client.chat.completions.create(
+      model           = model,
+      messages        = instruction,
+      response_format = { 'type' : "json_object" },
+      temperature     = 0.0
+      )
+
+    funeral_director_content_parsed = deepseek_response.choices[0].message.content
+    funeral_director_content_parsed = json.loads(funeral_director_content_parsed)
+    # Export parsed data
+    with open(f"{funeral_director_results_path}/prices_raw.json", "w+", encoding = 'utf-8') as f:
+        json.dump(funeral_director_content_parsed,f, ensure_ascii = False, indent = 4)
+
+   
+   [ ParseMarkdownFilesForACompany( company, FOLDER_DATE) for company in fd_names ]
 # %%

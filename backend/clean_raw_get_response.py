@@ -4,12 +4,8 @@ from crawl4ai import (
     CrawlerRunConfig,
     BrowserConfig
 )
-import os
 import json
 from setup import FUNERAL_DIRECTOR_NAMES, RESULTS_DIR, FDS_TO_CLEAN
-
-
-
 
 
 
