@@ -17,7 +17,7 @@ DATE = "2025_11_16"
 # )
 
 
-#ParseMarkdownFilesForAllCompanies( FDS_TO_CLEAN, DATE)#
+#ParseMarkdownFilesForAllCompanies( FDS_TO_CLEAN, DATE)
 
 
 #ProcessRawPricesForAllCompanies( FDS_TO_CLEAN, DATE)
