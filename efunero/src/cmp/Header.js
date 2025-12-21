@@ -1,7 +1,6 @@
 import './Header.css';
 import FPLoginButton from './FPLoginButton.js';
-import './FPLoginButton.css';
-
+import {Link, NavLink} from  "react-router-dom"
 function Header() {
 
     return (

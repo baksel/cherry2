@@ -1,0 +1,13 @@
+.App-body {
+  padding: 0% 8% 0%;
+  text-align: center;
+  color: var(--color-text-dark);
+  font-weight: 400;
+
+  
+}
+@media (max-width: 768px) {
+  .App-body {
+    padding: 0% 2%;
+  }
+}

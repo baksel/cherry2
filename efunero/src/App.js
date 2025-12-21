@@ -1,38 +1,36 @@
 import './App.css';
 import Header from './cmp/Header';
 //import SearchArea from './cmp/SearchArea';
-import FuneralItems from './cmp/FuneralItems';
 import Footer from './cmp/Footer'; 
-import ThePitch from './cmp/ThePitch';
-import { useState} from 'react';
+//import { useState} from 'react';
 import { useAuth } from './LoggedState';
-import {BrowserRouter as Router, Routes, Route}from  "react-router-dom"
-
+import {BrowserRouter as Router, Routes, Route} from  "react-router-dom"
+import MainPage from "./pages/MainPage"
+import FDFormPage from "./pages/FDFormPage"
 
 function App() {
 
   // By default, the search area will have "Helsinki" as the value
-  const [searchAreaValue, setSearchAreaValue] = useState("Helsinki");
+  
   const { isLoggedIn } = useAuth();
 
 
   return (  
     <>
       <div className="App">
-        <Header />
-        <div className="App-body">
-          {isLoggedIn ? (
-            <>
-            <ThePitch  updateCurrentSearchValue = {setSearchAreaValue} />
-            <FuneralItems searchAreaValue = {searchAreaValue}/>
-            </>
-          ) : (
-      
-            <h2> "Texting Context Sharing"</h2>
-          )
-        }
-        </div>
-          <Footer /> 
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<MainPage/>} />
+            <Route path="/hautaustoimistoille" element={<FDFormPage/>} />
+            <Route path="*" element={<MainPage/>} />
+
+          </Routes>
+
+          {/* <MainPage/> */}
+            <Footer /> 
+
+      </Router>
       </div>
     </>
     
