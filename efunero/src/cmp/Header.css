@@ -9,7 +9,16 @@
   gap: 0rem;
 }
 
+.links {
+  text-decoration: none;
+}
 
+.links-main-page {
+  display: inline-flex;
+  
+  flex-shrink: 1;
+  text-decoration: none;
+}
 
 .App-Header h1 {
   font-weight: 500;
