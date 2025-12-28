@@ -6,13 +6,18 @@ async function handleEmailSignin(auth, href, email) {
    try {
         if (!isSignInWithEmailLink(auth, href)) {
           
-          return;
+          return (
+            {status: "Incorrect email"}
+          )
         }
 
         // Happens if link is opened on another device
         if (!email) {
+          console.log("Reached `opened another device'")
           
-          return;
+          return (  
+            {status: "Openede another device"}
+          )
         }
 
         const cleanEmail = email.trim().toLowerCase();

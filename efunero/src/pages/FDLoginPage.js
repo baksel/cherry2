@@ -17,7 +17,7 @@ function FDLoginPage() {
 
     try {
       const actionCodeSettings = {
-        url: `${window.location.origin}/hautaustoimistoille/finish`,
+        url: `${window.location.origin}/hautaustoimistoille/finish?email=${cleanEmail}`,
         handleCodeInApp: true,
       };
 

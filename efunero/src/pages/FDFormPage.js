@@ -14,12 +14,17 @@ import {
 function FDFormPage() {
     
     const [stage, setStage] = useState("loading");
-    const [email, setEmail] = useState(
-    window.localStorage.getItem("efunero_provider_email") || ""
-    );
+    const [email, setEmail] = useState("");
     const [error, setError] = useState("");
+
+      useEffect(() => {
+
+        const current_url = new URL( window.location.href);
+        const emailFromUrl = current_url.searchParams.get("email") || "";
+        setEmail(emailFromUrl);
+  }, []);
     
-    
+    console.log(email);
     useEffect(() => {
       const _handleEmailSignIn = async () => {
         const { status, error } = await handleEmailSignin(auth, window.location.href, email);
