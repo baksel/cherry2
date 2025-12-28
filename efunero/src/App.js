@@ -8,6 +8,7 @@ import {BrowserRouter as Router, Routes, Route} from  "react-router-dom"
 import MainPage from "./pages/MainPage"
 import FDFormPage from "./pages/FDFormPage"
 import FDLoginPage from './pages/FDLoginPage';
+import FDForm from './cmp/FDForm';
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
             <Route path="/" element={<MainPage/>} />
             <Route path="/hautaustoimistoille" element={<FDLoginPage/>} />
             <Route path="/hautaustoimistoille/finish" element={<FDFormPage/>} />
-            <Route path="/hautaustoimistoilleOLD" element={<FDFormPage/>} />
+            <Route path="/hautaustoimistoilleOLD" element={<FDForm/>} />
             <Route path="*" element={<MainPage/>} />
 
           </Routes>

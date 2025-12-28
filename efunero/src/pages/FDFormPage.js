@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase-config";
 import handleEmailSignin from "../hooks/handleEmailSignin"
+import FDForm from "../cmp/FDForm"
 
 import {
   addDoc,
@@ -78,16 +79,16 @@ function FDFormPage() {
       </div>
     );
   }
+    if (stage === "success") {
+    return (
+      <FDForm/>
+    );
+  }
+
 
   if (stage === "submitted") {
     return (
-      <div>
-        <h3>Kiitos!</h3>
-        <p>
-          Vastaanotimme tietonne. Saatte ilmoituksen, kun ne on tarkistettu ja
-          hyväksytty.
-        </p>
-      </div>
+      <p> Moi </p>
     );
   }
 

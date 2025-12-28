@@ -1,0 +1,31 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  /* padding: 2rem; */
+  gap: 2rem;
+
+}
+
+.form-info {
+  padding: 0 2rem;
+
+}
+
+.fd-form {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-dark);
+  padding: 2rem;
+  gap: 2rem;
+
+
+}
+
+.fd-form__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+
+}
