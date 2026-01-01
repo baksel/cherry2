@@ -7,6 +7,8 @@ function FDLoginPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
+  console.log("Code reached ehere");
+
   const sendLink = async () => {
     setError("");
     const cleanEmail = email.trim().toLowerCase();
@@ -31,6 +33,8 @@ function FDLoginPage() {
   };
 
   return (
+    //isLoggedIn ? Display FormPage : display Login Page  
+
     <div style={{ maxWidth: 500, margin: "40px auto" }}>
       <h2>Hautaustoimistoille</h2>
 

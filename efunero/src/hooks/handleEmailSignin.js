@@ -5,7 +5,7 @@ async function handleEmailSignin(auth, href, email) {
   console.log(auth, href, email);
    try {
         if (!isSignInWithEmailLink(auth, href)) {
-          
+          console.log(href);
           return (
             {status: "Incorrect email"}
           )

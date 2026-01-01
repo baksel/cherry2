@@ -29,3 +29,10 @@
 
 
 }
+.fd-form__item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+
+}

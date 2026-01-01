@@ -1,59 +1,60 @@
 import { useEffect, useState } from "react";
-import { auth, db } from "../config/firebase-config";
+import { auth} from "../config/firebase-config";
 import handleEmailSignin from "../hooks/handleEmailSignin"
-import FDForm from "../cmp/FDForm"
-
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
-
+import FDForm from "../cmp/FDForm";
+import {onAuthStateChanged} from "firebase/auth";
 
 
 function FDFormPage() {
-    
-    const [stage, setStage] = useState("loading");
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
 
-      useEffect(() => {
+  const [stage, setStage] = useState("loading");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  // Get email from URL
+  useEffect(() => {
 
-        const current_url = new URL( window.location.href);
-        const emailFromUrl = current_url.searchParams.get("email") || "";
-        setEmail(emailFromUrl);
-  }, []);
-    
-    console.log(email);
-    useEffect(() => {
-      const _handleEmailSignIn = async () => {
-        const { status, error } = await handleEmailSignin(auth, window.location.href, email);
-        setStage(status);
-        console.log(status);
-        console.log(error);
-       }
-       _handleEmailSignIn()
-    
-    
+    const current_url = new URL( window.location.href);
+    const emailFromUrl = current_url.searchParams.get("email") || "";
+    setEmail(emailFromUrl);
+    }, []);
+  
+  
+  //console.log("stage is", stage);
 
-  }, [email]);
-
-  const submit = async () => {
-    setError("");
-    try {
-      await addDoc(collection(db, "providerSubmissions"), {
-        submittedByEmail: auth.currentUser?.email || null,
-        status: "pending",
-        createdAt: serverTimestamp(),
+  // Check if already logged in
+  useEffect( () => {
+      const unsub = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("hababam", user);
+            setStage("success");
+            console.log("You've reached success stage but Stage is ", stage);
+          } 
+          
       });
 
-      setStage("submitted");
-    } catch (e) {
-      console.error(e);
-      setError("Tietojen lähetys epäonnistui.");
-    }
-  };
+      return () => unsub(); 
+  }, []);
+  // if hasn't logged in, run login procedure
+  useEffect(() => {
+    const _handleEmailSignIn = async () => {
+      console.log("stage is: ", stage);
 
+
+      if (stage === "success") {
+        return
+
+
+      }
+      const { status, error } = await handleEmailSignin(auth, window.location.href, email);
+      setStage(status);
+      }
+      _handleEmailSignIn();
+  
+  
+
+  }, [email, stage]);
+
+  console.log("stage is", stage);
   // ---------------- UI STATES ----------------
 
   if (stage === "loading") {
@@ -106,7 +107,7 @@ function FDFormPage() {
     );
   }
 
-}
+  }
 
 
 export default FDFormPage;
