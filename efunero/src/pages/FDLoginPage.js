@@ -7,7 +7,6 @@ function FDLoginPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-  console.log("Code reached ehere");
 
   const sendLink = async () => {
     setError("");

@@ -19,7 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage/>} />
             <Route path="/hautaustoimistoille" element={<FDLoginOrFormPage/>} />
-            <Route path="/hautaustoimistoille/finish" element={<FDFormPage/>} />
+            <Route path="/hautaustoimistoille/finish" element={<FDLoginOrFormPage/>} />
             <Route path="*" element={<MainPage/>} />
 
           </Routes>
