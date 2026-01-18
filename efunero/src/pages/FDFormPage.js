@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { auth} from "../config/firebase-config";
 import handleEmailSignin from "../hooks/handleEmailSignin"
 import FDForm from "../cmp/FDForm";
-import {onAuthStateChanged} from "firebase/auth";
 
 
-function FDFormPage() {
+function FDFormPage( {stage, setStage} ) {
 
-  const [stage, setStage] = useState("loading");
+  //const [stage, setStage] = useState("loading");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   // Get email from URL
@@ -19,38 +18,22 @@ function FDFormPage() {
     }, []);
   
   
-  //console.log("stage is", stage);
-
-  // Check if already logged in
-  useEffect( () => {
-      const unsub = onAuthStateChanged(auth, (user) => {
-        if (user) {
-            console.log("hababam", user);
-            setStage("success");
-            console.log("You've reached success stage but Stage is ", stage);
-          } 
-          
-      });
-
-      return () => unsub(); 
-  }, []);
-  // if hasn't logged in, run login procedure
   useEffect(() => {
+
     const _handleEmailSignIn = async () => {
       console.log("stage is: ", stage);
 
-
+      // Run only the below if not success
       if (stage === "success") {
         return
-
-
       }
+
       const { status, error } = await handleEmailSignin(auth, window.location.href, email);
       setStage(status);
-      }
-      _handleEmailSignIn();
-  
-  
+    }
+
+    _handleEmailSignIn();
+
 
   }, [email, stage]);
 
@@ -60,41 +43,10 @@ function FDFormPage() {
   if (stage === "loading") {
     return <p>Kirjaudutaan…</p>;
   }
-
-  if (stage === "needEmail") {
-    return (
-      <div>
-        <p>
-          Syötä sähköpostiosoite uudelleen (jos avasit linkin eri laitteella):
-        </p>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-    );
-  }
-
-  if (stage === "unauthorized") {
-    return (
-      <div>
-        <h3>Ei valtuutusta</h3>
-        <p>
-          Tätä sähköpostia ei ole valtuutettu käyttämään lomaketta.
-        </p>
-      </div>
-    );
-  }
+ 
     if (stage === "success") {
     return (
       <FDForm/>
-    );
-  }
-
-
-  if (stage === "submitted") {
-    return (
-      <p> Moi </p>
     );
   }
 

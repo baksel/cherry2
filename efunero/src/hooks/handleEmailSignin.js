@@ -16,7 +16,7 @@ async function handleEmailSignin(auth, href, email) {
           console.log("Reached `opened another device'")
           
           return (  
-            {status: "Openede another device"}
+            {status: "Opened another device"}
           )
         }
 

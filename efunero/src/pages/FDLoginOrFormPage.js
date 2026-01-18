@@ -7,12 +7,10 @@ import {auth} from "../config/firebase-config"
 
 function FDLoginOrFormPage() {
   const [stage, setStage] = useState("loading");
-  const [isAuthRdy, setIsAuthRdy] = useState(false);
 
   useEffect( () => {
 
     const unsub = onAuthStateChanged(auth, (user) => {
-      setIsAuthRdy(true);
       if (user) {
         setStage("success")
       }
@@ -22,12 +20,13 @@ function FDLoginOrFormPage() {
 
 
 
-  }, []);
+  }, [stage]);
+  console.log("Status in FDLoginOrFormPage is: ", stage);
 
-  if (!isAuthRdy) return ( <p> Loading... </p>);
+  if ( stage === "loading" ) return ( <p> Loading... </p>);
   return (
     <>
-      { stage !== "success"? <FDLoginPage /> : <FDFormPage/> }
+      { stage !== "success"? <FDLoginPage /> : <FDFormPage stage={stage} setStage={setStage}/> }
     </>
   );
   
